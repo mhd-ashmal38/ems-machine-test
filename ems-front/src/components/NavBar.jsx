@@ -1,11 +1,28 @@
-import React from 'react'
-import { Button, Dropdown, DropdownItem, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react";
+import React, { useEffect, useState } from 'react'
+import { Button, Navbar, NavbarBrand, NavbarCollapse, NavbarLink, NavbarToggle } from "flowbite-react";
 import { FaUsers } from "react-icons/fa";
-import { Link, useLocation } from 'react-router-dom';
+import { Link, useLocation, useNavigate } from 'react-router-dom';
 
 function NavBar() {
 
     const location = useLocation()
+    const navigate = useNavigate();
+    const [username, setUsername] = useState('');
+
+    useEffect(() => {
+        // Retrieve username from local storage
+        const storedUsername = localStorage.getItem('username');
+        setUsername(storedUsername);
+    }, []);
+
+    const handleLogout = () => {
+        // Clear username from local storage
+        localStorage.removeItem('username');
+        // Clear the username state
+        setUsername('');
+        // Redirect to '/' page
+        navigate('/');
+    };
 
     return (
         <div>
@@ -15,13 +32,8 @@ function NavBar() {
                     <FaUsers size={36} />
                 </NavbarBrand>
                 <div className="flex md:order-2 gap-4">
-                    <Dropdown label="Dropdown" inline>
-                        <DropdownItem>Dashboard</DropdownItem>
-                        <DropdownItem>Settings</DropdownItem>
-                        <DropdownItem>Earnings</DropdownItem>
-                        <DropdownItem>Sign out</DropdownItem>
-                    </Dropdown>
-                    <Button>Logout</Button>
+                    <p className='flex items-center'>{username} -</p>
+                    <Button onClick={handleLogout}>Logout</Button>
                     <NavbarToggle />
                 </div>
                 <NavbarCollapse>
